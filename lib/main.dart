@@ -27,25 +27,17 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(24),
-        child: ListView.separated(
-          itemCount: Spirit.all.length,
-          separatorBuilder: (_, _) => Divider(
-            height: 48,
-            thickness: 0.7,
-            color: Colors.grey.shade200,
-            indent: 24,
-            endIndent: 24,
-          ),
-          itemBuilder: (_, index) {
-            return Container(
-              padding: const EdgeInsets.all(8),
-              color: Spirit.all[index].color.withValues(alpha: 0.075),
-              child: SpiritWidget(spirit: Spirit.all[index]),
-            );
-          },
-        ),
+      body: PageView.builder(
+        allowImplicitScrolling: true,
+        itemCount: Spirit.all.length,
+        itemBuilder: (context, index) {
+          return Center(
+            child: SpiritWidget(
+              spirit: Spirit.all[index],
+              size: 180,
+            ),
+          );
+        },
       ),
     );
   }
