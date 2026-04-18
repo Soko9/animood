@@ -11,6 +11,11 @@ class Spirit {
     required this.icon,
   });
 
+  final String name;
+  final String description;
+  final Color color;
+  final String icon;
+
   static const List<Spirit> all = [
     Spirit(
       name: 'Happy',
@@ -52,7 +57,7 @@ class Spirit {
       description:
           'Your dragon is awake—fiery, intense, and ready to release what’s been building up.',
       color: AppColors.angry,
-      icon: GameIcons.spiked_dragon_head,
+      icon: GameIcons.sea_dragon,
     ),
     Spirit(
       name: 'Stressed',
@@ -62,9 +67,4 @@ class Spirit {
       icon: GameIcons.squirrel,
     ),
   ];
-  final String name;
-  final String description;
-  final Color color;
-
-  final String icon;
 }
