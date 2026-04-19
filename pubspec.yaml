@@ -1,6 +1,6 @@
 name: animood
 description: "A new Flutter project."
-publish_to: 'none'
+publish_to: "none"
 version: 0.1.0+1
 
 environment:
@@ -14,7 +14,6 @@ dependencies:
   get_it: ^9.2.1
   google_fonts: ^8.0.2
   iconify_flutter: ^0.0.7
-  iconify_flutter_plus: ^1.0.4
   watch_it: ^2.4.2
 
 dev_dependencies:
