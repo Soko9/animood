@@ -7,7 +7,7 @@ class AppTheme {
 
   static ThemeData get light => ThemeData.light().copyWith(
     scaffoldBackgroundColor: AppColors.background,
-    textTheme: GoogleFonts.jetBrainsMonoTextTheme(),
+    textTheme: GoogleFonts.outfitTextTheme(),
     colorScheme: const ColorScheme.light(
       primary: AppColors.primary,
       onSurface: AppColors.text,

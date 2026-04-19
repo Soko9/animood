@@ -1,4 +1,7 @@
+import 'dart:math' as math;
+
 import 'package:animood/src/app/models/spirit.dart';
+import 'package:animood/src/core/app_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:iconify_flutter/iconify_flutter.dart' show Iconify;
@@ -7,28 +10,54 @@ class SpiritWidget extends StatelessWidget {
   const SpiritWidget({
     required this.spirit,
     this.size = 120,
-    this.showShadow = false,
+    this.showExtras = false,
     this.isAnimating = false,
     super.key,
   });
 
   final Spirit spirit;
   final double size;
-  final bool showShadow;
+  final bool showExtras;
   final bool isAnimating;
 
   @override
   Widget build(BuildContext context) {
-    final speed = 1.seconds;
+    final textTheme = context.textTheme;
+    final speed = 2.seconds;
     final distance = size * 0.05;
-    final shadowRadius = size * 0.65;
+    final shadowRadius = size * 0.8;
 
-    return Column(
-      mainAxisSize: .min,
+    return Stack(
+      alignment: .bottomCenter,
       children: [
-        _buildIcon(speed, distance, isAnimating),
-        if (showShadow) _buildShadow(speed, shadowRadius, isAnimating),
+        Column(
+          mainAxisSize: .min,
+          children: [
+            if (showExtras) _buildName(textTheme),
+            16.vGap,
+            _buildIcon(speed, distance, isAnimating),
+            (shadowRadius * 0.5).vGap,
+          ],
+        ),
+        if (showExtras)
+          Positioned(
+            bottom: 0,
+            child: _buildShadow(speed, shadowRadius, isAnimating),
+          ),
       ],
+    );
+  }
+
+  Widget _buildName(TextTheme textTheme) {
+    return spirit.name.toSpiritName(
+      titleStyle: textTheme.titleSmall!.copyWith(
+        color: spirit.color,
+        fontWeight: .w100,
+      ),
+      subTitleStyle: textTheme.headlineLarge!.copyWith(
+        color: spirit.color,
+        fontWeight: .w900,
+      ),
     );
   }
 
@@ -56,25 +85,27 @@ class SpiritWidget extends StatelessWidget {
   }
 
   Widget _buildShadow(Duration speed, double shadowRadius, bool isAnimating) {
-    final widget = Container(
-      height: shadowRadius * 0.5,
-      width: shadowRadius,
-      decoration: BoxDecoration(
-        color: spirit.color.withValues(alpha: 0.15),
-        borderRadius: .all(
-          .elliptical(shadowRadius * 0.5, shadowRadius * 0.25),
-        ),
-        border: Border.all(
-          color: spirit.color,
-          width: 4,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: spirit.color.withValues(alpha: 0.8),
-            blurRadius: 8,
-            blurStyle: .outer,
+    final widget = Transform.rotate(
+      angle: -math.pi / 4,
+      child: Container(
+        height: shadowRadius,
+        width: shadowRadius,
+        decoration: BoxDecoration(
+          color: spirit.color.withValues(alpha: 0.15),
+          border: Border.all(
+            color: spirit.color.withValues(alpha: 0.3),
+            width: 4,
           ),
-        ],
+          borderRadius: .circular(16),
+          // shape: .circle,
+          boxShadow: [
+            BoxShadow(
+              color: spirit.color.withValues(alpha: 0.25),
+              blurRadius: 8,
+              blurStyle: .outer,
+            ),
+          ],
+        ),
       ),
     );
 

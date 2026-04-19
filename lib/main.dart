@@ -18,7 +18,7 @@ class MainApp extends StatelessWidget {
       title: 'Animood',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
-      home: const Home(),
+      home: const HomeScreen(),
     );
   }
 }

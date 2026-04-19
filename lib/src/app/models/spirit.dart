@@ -5,12 +5,14 @@ import 'package:iconify_flutter/icons/game_icons.dart';
 
 class Spirit {
   const Spirit({
+    required this.id,
     required this.name,
     required this.description,
     required this.color,
     required this.icon,
   });
 
+  final String id;
   final String name;
   final String description;
   final Color color;
@@ -18,49 +20,56 @@ class Spirit {
 
   static const List<Spirit> all = [
     Spirit(
-      name: 'Happy',
+      id: 'happy',
+      name: 'Joy\nHound',
       description:
           'Your inner dog is wagging its tail—full of joy, energy, and love for the moment.',
       color: AppColors.happy,
       icon: GameIcons.sitting_dog,
     ),
     Spirit(
-      name: 'Calm',
+      id: 'calm',
+      name: 'Serene\nDeer',
       description:
           'Like a quiet deer in the forest, you’re grounded, gentle, and at peace.',
       color: AppColors.calm,
       icon: GameIcons.deer,
     ),
     Spirit(
-      name: 'Neutral',
+      id: 'neutral',
+      name: 'Steady\nPenguin',
       description:
           'Your penguin is just going with the flow—steady, balanced, and taking things as they come.',
       color: AppColors.neutral,
       icon: GameIcons.penguin,
     ),
     Spirit(
-      name: 'Low',
+      id: 'low',
+      name: 'Weary\nSloth',
       description:
           'Your sloth is moving slow today—low energy, seeking rest and a little extra care.',
       color: AppColors.low,
       icon: GameIcons.sloth,
     ),
     Spirit(
-      name: 'Sad',
+      id: 'sad',
+      name: 'Gloomy\nHopper',
       description:
           'A quiet frog in the rain—soft, reflective, and feeling the weight of emotions.',
       color: AppColors.sad,
       icon: GameIcons.frog,
     ),
     Spirit(
-      name: 'Angry',
+      id: 'angry',
+      name: 'Rage\nWyvern',
       description:
-          'Your dragon is awake—fiery, intense, and ready to release what’s been building up.',
+          'Your dragon is awarke—fiery, intense, and ready to release what’s been building up.',
       color: AppColors.angry,
       icon: GameIcons.sea_dragon,
     ),
     Spirit(
-      name: 'Stressed',
+      id: 'stressed',
+      name: 'Frenzy\nSquirrel',
       description:
           'Like a busy squirrel, your mind is racing—juggling too much and needing a pause.',
       color: AppColors.stressed,
