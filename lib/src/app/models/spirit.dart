@@ -3,8 +3,8 @@ import 'dart:ui' show Color;
 import 'package:animood/src/core/app_colors.dart';
 import 'package:iconify_flutter/icons/game_icons.dart';
 
-class Spirit {
-  const Spirit({
+class SpiritMood {
+  const SpiritMood({
     required this.id,
     required this.name,
     required this.description,
@@ -12,14 +12,22 @@ class Spirit {
     required this.icon,
   });
 
+  factory SpiritMood.none() => const SpiritMood(
+    id: 'none',
+    name: 'None',
+    description: 'No spirit mood selected.',
+    color: AppColors.text,
+    icon: GameIcons.cross_mark,
+  );
+
   final String id;
   final String name;
   final String description;
   final Color color;
   final String icon;
 
-  static const List<Spirit> all = [
-    Spirit(
+  static const List<SpiritMood> all = [
+    SpiritMood(
       id: 'happy',
       name: 'Joy\nHound',
       description:
@@ -27,7 +35,7 @@ class Spirit {
       color: AppColors.happy,
       icon: GameIcons.sitting_dog,
     ),
-    Spirit(
+    SpiritMood(
       id: 'calm',
       name: 'Serene\nDeer',
       description:
@@ -35,7 +43,7 @@ class Spirit {
       color: AppColors.calm,
       icon: GameIcons.deer,
     ),
-    Spirit(
+    SpiritMood(
       id: 'neutral',
       name: 'Steady\nPenguin',
       description:
@@ -43,7 +51,7 @@ class Spirit {
       color: AppColors.neutral,
       icon: GameIcons.penguin,
     ),
-    Spirit(
+    SpiritMood(
       id: 'low',
       name: 'Weary\nSloth',
       description:
@@ -51,7 +59,7 @@ class Spirit {
       color: AppColors.low,
       icon: GameIcons.sloth,
     ),
-    Spirit(
+    SpiritMood(
       id: 'sad',
       name: 'Gloomy\nHopper',
       description:
@@ -59,7 +67,7 @@ class Spirit {
       color: AppColors.sad,
       icon: GameIcons.frog,
     ),
-    Spirit(
+    SpiritMood(
       id: 'angry',
       name: 'Rage\nWyvern',
       description:
@@ -67,7 +75,7 @@ class Spirit {
       color: AppColors.angry,
       icon: GameIcons.sea_dragon,
     ),
-    Spirit(
+    SpiritMood(
       id: 'stressed',
       name: 'Frenzy\nSquirrel',
       description:

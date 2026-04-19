@@ -32,7 +32,12 @@ extension DateTimeExtebsions on DateTime {
 
   String get currentCalendar => '${monthName()} ~ $year';
 
-  String get getDateString => '$day ${monthName(isShort: true)} $year';
+  String get getDateString => '$day ${monthName(isShort: true)}\n$year';
+
+  bool get isToday =>
+      day == DateTime.now().day &&
+      month == DateTime.now().month &&
+      year == DateTime.now().year;
 }
 
 extension StringExtensions on String {
@@ -53,5 +58,31 @@ extension StringExtensions on String {
         ],
       ),
     );
+  }
+}
+
+extension ColorExtension on Color {
+  /// Lightens the color by [amount] (0.0 - 1.0)
+  Color lighten([double amount = .1]) {
+    assert(amount >= 0 && amount <= 1, 'Amount must be between 0 and 1');
+
+    final hsl = HSLColor.fromColor(this);
+    final lightened = hsl.withLightness(
+      (hsl.lightness + amount).clamp(0.0, 1.0),
+    );
+
+    return lightened.toColor();
+  }
+
+  /// Darkens the color by [amount] (0.0 - 1.0)
+  Color darken([double amount = .1]) {
+    assert(amount >= 0 && amount <= 1, 'Amount must be between 0 and 1');
+
+    final hsl = HSLColor.fromColor(this);
+    final darkened = hsl.withLightness(
+      (hsl.lightness - amount).clamp(0.0, 1.0),
+    );
+
+    return darkened.toColor();
   }
 }

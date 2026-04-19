@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 
 class HomeController {
   void onSpiritChanged(int index) {
-    currentSpirit.value = Spirit.all[index];
+    currentSpirit.value = SpiritMood.all[index];
   }
 
-  final ValueNotifier<Spirit> currentSpirit = ValueNotifier(Spirit.all[0]);
-  set currentSpirit(Spirit value) {
+  final ValueNotifier<SpiritMood> currentSpirit = ValueNotifier(
+    SpiritMood.all[0],
+  );
+  set currentSpirit(SpiritMood value) {
     currentSpirit.value = value;
   }
 

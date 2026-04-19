@@ -1,12 +1,11 @@
 import 'package:animood/src/app/home/home_controller.dart';
+import 'package:animood/src/app/models/day.dart';
 import 'package:animood/src/app/models/spirit.dart';
+import 'package:animood/src/app/widgets/day_widget.dart';
 import 'package:animood/src/app/widgets/spirit_widget.dart';
-import 'package:animood/src/core/app_colors.dart';
 import 'package:animood/src/core/app_extensions.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:iconify_flutter/iconify_flutter.dart';
-import 'package:iconify_flutter/icons/game_icons.dart';
 import 'package:watch_it/watch_it.dart';
 
 class HomeScreen extends WatchingWidget {
@@ -30,65 +29,30 @@ class HomeScreen extends WatchingWidget {
             crossAxisAlignment: .stretch,
             children: [
               _buildCarousel(context, controller, currentSpirit),
-              Stack(
-                alignment: .center,
-                children: [
-                  Container(
-                    color: currentSpirit.color.withValues(alpha: 0.2),
-                    height: 12,
-                    width: .infinity,
-                  ),
-                  Text(
-                    DateTime.now().currentCalendar,
-                    textAlign: .center,
-                    style: context.textTheme.displayMedium,
-                  ),
-                ],
-              ),
+              _buildMonthYear(currentSpirit, context),
               38.vGap,
               SizedBox(
                 height: context.sh * 0.5,
                 child: GridView.count(
+                  padding: const .all(12),
                   crossAxisCount: 4,
-                  mainAxisSpacing: 12,
-                  crossAxisSpacing: 12,
-                  children: controller
-                      .getDaysBetween()
-                      .map(
-                        (date) => Stack(
-                          clipBehavior: .none,
-                          alignment: .center,
-                          children: [
-                            Transform.rotate(
-                              angle: 0.12,
-                              child: Container(
-                                padding: const .all(4),
-                                alignment: .center,
-                                decoration: BoxDecoration(
-                                  color: currentSpirit.color,
-                                  borderRadius: .circular(4),
-                                ),
-                                child: Text(
-                                  date.getDateString,
-                                  style: context.textTheme.titleSmall?.copyWith(
-                                    fontWeight: .bold,
-                                  ),
-                                ),
-                              ),
+                  mainAxisSpacing: 16,
+                  crossAxisSpacing: 16,
+                  children:
+                      // controller
+                      //     .getDaysBetween()
+                      Day.all
+                          .map(
+                            (date) => DayWidget(
+                              day: date,
+                              // Day(
+                              //   id: date.millisecondsSinceEpoch,
+                              //   dateTime: date,
+                              // ),
+                              currentMoodColor: currentSpirit.color,
                             ),
-                            const Positioned(
-                              top: -14,
-                              left: 12,
-                              child: Iconify(
-                                GameIcons.pin,
-                                size: 20,
-                                color: AppColors.text,
-                              ),
-                            ),
-                          ],
-                        ),
-                      )
-                      .toList(),
+                          )
+                          .toList(),
                 ),
               ),
             ],
@@ -98,10 +62,28 @@ class HomeScreen extends WatchingWidget {
     );
   }
 
+  Widget _buildMonthYear(SpiritMood currentSpirit, BuildContext context) {
+    return Stack(
+      alignment: .center,
+      children: [
+        Container(
+          color: currentSpirit.color.withValues(alpha: 0.2),
+          height: 12,
+          width: .infinity,
+        ),
+        Text(
+          DateTime.now().currentCalendar,
+          textAlign: .center,
+          style: context.textTheme.displayMedium,
+        ),
+      ],
+    );
+  }
+
   Widget _buildCarousel(
     BuildContext context,
     HomeController controller,
-    Spirit currentSpirit,
+    SpiritMood currentSpirit,
   ) {
     return SizedBox(
       height: context.sh * 0.3,
@@ -113,9 +95,9 @@ class HomeScreen extends WatchingWidget {
           enlargeFactor: 0.8,
           onPageChanged: (index, _) => controller.onSpiritChanged(index),
         ),
-        itemCount: Spirit.all.length,
+        itemCount: SpiritMood.all.length,
         itemBuilder: (_, index, _) {
-          final spirit = Spirit.all[index];
+          final spirit = SpiritMood.all[index];
           return SpiritWidget(
             spirit: spirit,
             showExtras: spirit == currentSpirit,

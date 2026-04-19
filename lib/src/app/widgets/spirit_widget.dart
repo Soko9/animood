@@ -15,7 +15,7 @@ class SpiritWidget extends StatelessWidget {
     super.key,
   });
 
-  final Spirit spirit;
+  final SpiritMood spirit;
   final double size;
   final bool showExtras;
   final bool isAnimating;
