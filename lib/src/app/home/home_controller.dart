@@ -1,3 +1,4 @@
+import 'package:animood/src/app/models/day.dart';
 import 'package:animood/src/app/models/spirit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +13,11 @@ class HomeController {
   );
   set currentSpirit(SpiritMood value) {
     currentSpirit.value = value;
+  }
+
+  final ValueNotifier<Day?> currentDay = ValueNotifier(null);
+  set currentDay(Day? value) {
+    currentDay.value = value;
   }
 
   List<DateTime> getDaysBetween() {

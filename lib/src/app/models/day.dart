@@ -54,7 +54,6 @@ class Day {
     Day(
       id: 7,
       dateTime: DateTime.now().subtract(const Duration(days: 3)),
-      mood: SpiritMood.all[0],
     ),
     Day(
       id: 8,

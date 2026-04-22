@@ -11,11 +11,13 @@ class DayWidget extends StatelessWidget {
   const DayWidget({
     required this.day,
     required this.currentMoodColor,
+    this.currentDay,
     super.key,
   });
 
   final Day day;
   final Color currentMoodColor;
+  final Day? currentDay;
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +27,7 @@ class DayWidget extends StatelessWidget {
         : AppColors.text;
     final isToday = day.dateTime.isToday;
     final isCurrentMood = mood.color == currentMoodColor;
+    final isCurrentDay = currentDay != null && currentDay!.id == day.id;
 
     return Stack(
       clipBehavior: .none,
@@ -47,10 +50,24 @@ class DayWidget extends StatelessWidget {
                 color: mood.color,
                 borderRadius: isToday ? null : .circular(4),
                 shape: isToday ? .circle : .rectangle,
-                border: isToday
+                boxShadow: isCurrentDay
+                    ? [
+                        const BoxShadow(
+                          color: AppColors.text,
+                          offset: Offset(2, 2),
+                          spreadRadius: 1,
+                        ),
+                      ]
+                    : [],
+                border: isToday && mood == SpiritMood.none()
                     ? Border.all(
                         width: 2,
                         color: currentMoodColor,
+                      )
+                    : isCurrentDay
+                    ? Border.all(
+                        width: 2.5,
+                        color: AppColors.text,
                       )
                     : null,
               ),

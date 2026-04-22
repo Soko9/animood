@@ -6,6 +6,7 @@ import 'package:animood/src/app/widgets/spirit_widget.dart';
 import 'package:animood/src/core/app_extensions.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:watch_it/watch_it.dart';
 
 class HomeScreen extends WatchingWidget {
@@ -16,6 +17,9 @@ class HomeScreen extends WatchingWidget {
     final controller = di<HomeController>();
     final currentSpirit = watchValue(
       (HomeController controller) => controller.currentSpirit,
+    );
+    final currentDay = watchValue(
+      (HomeController controller) => controller.currentDay,
     );
 
     return Scaffold(
@@ -28,36 +32,59 @@ class HomeScreen extends WatchingWidget {
           child: Column(
             crossAxisAlignment: .stretch,
             children: [
-              _buildCarousel(context, controller, currentSpirit),
+              _buildCarousel(context, controller, currentSpirit, currentDay),
               _buildMonthYear(currentSpirit, context),
               38.vGap,
-              SizedBox(
-                height: context.sh * 0.5,
-                child: GridView.count(
-                  padding: const .all(12),
-                  crossAxisCount: 4,
-                  mainAxisSpacing: 16,
-                  crossAxisSpacing: 16,
-                  children:
-                      // controller
-                      //     .getDaysBetween()
-                      Day.all
-                          .map(
-                            (date) => DayWidget(
-                              day: date,
-                              // Day(
-                              //   id: date.millisecondsSinceEpoch,
-                              //   dateTime: date,
-                              // ),
-                              currentMoodColor: currentSpirit.color,
-                            ),
-                          )
-                          .toList(),
-                ),
-              ),
+              _buildCalendar(context, currentSpirit, currentDay, controller),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildCalendar(
+    BuildContext context,
+    SpiritMood currentSpirit,
+    Day? currentDay,
+    HomeController controller,
+  ) {
+    return SizedBox(
+      height: context.sh * 0.5,
+      child: GridView.count(
+        padding: const .all(12),
+        crossAxisCount: 4,
+        mainAxisSpacing: 18,
+        crossAxisSpacing: 18,
+        children:
+            // controller
+            //     .getDaysBetween()
+            Day.all
+                .map(
+                  (day) => GestureDetector(
+                    onTap: () {
+                      if (day.dateTime.isToday && day.mood == null) {
+                        //TODO: IMPLEMENT TODAY'S MOOD ENTRY
+                      } else {
+                        if (controller.currentDay.value == day) {
+                          controller.currentDay = null;
+                        } else {
+                          controller.currentDay = day;
+                        }
+                      }
+                    },
+                    child: DayWidget(
+                      day: day,
+                      // Day(
+                      //   id: day.millisecondsSinceEpoch,
+                      //   dateTime: day,
+                      // ),
+                      currentMoodColor: currentSpirit.color,
+                      currentDay: currentDay,
+                    ),
+                  ),
+                )
+                .toList(),
       ),
     );
   }
@@ -84,26 +111,31 @@ class HomeScreen extends WatchingWidget {
     BuildContext context,
     HomeController controller,
     SpiritMood currentSpirit,
+    Day? currentDay,
   ) {
-    return SizedBox(
-      height: context.sh * 0.3,
-      child: CarouselSlider.builder(
-        options: CarouselOptions(
-          viewportFraction: 0.5,
-          enlargeCenterPage: true,
-          enlargeStrategy: .zoom,
-          enlargeFactor: 0.8,
-          onPageChanged: (index, _) => controller.onSpiritChanged(index),
+    return AnimatedSize(
+      duration: 450.milliseconds,
+      curve: Curves.fastEaseInToSlowEaseOut,
+      child: SizedBox(
+        height: currentDay == null ? context.sh * 0.3 : 0,
+        child: CarouselSlider.builder(
+          options: CarouselOptions(
+            viewportFraction: 0.5,
+            enlargeCenterPage: true,
+            enlargeStrategy: .zoom,
+            enlargeFactor: 0.8,
+            onPageChanged: (index, _) => controller.onSpiritChanged(index),
+          ),
+          itemCount: SpiritMood.all.length,
+          itemBuilder: (_, index, _) {
+            final spirit = SpiritMood.all[index];
+            return SpiritWidget(
+              spirit: spirit,
+              showExtras: spirit == currentSpirit,
+              isAnimating: spirit == currentSpirit,
+            );
+          },
         ),
-        itemCount: SpiritMood.all.length,
-        itemBuilder: (_, index, _) {
-          final spirit = SpiritMood.all[index];
-          return SpiritWidget(
-            spirit: spirit,
-            showExtras: spirit == currentSpirit,
-            isAnimating: spirit == currentSpirit,
-          );
-        },
       ),
     );
   }
