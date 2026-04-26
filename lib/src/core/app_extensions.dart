@@ -32,7 +32,8 @@ extension DateTimeExtebsions on DateTime {
 
   String get currentCalendar => '${monthName()} ~ $year';
 
-  String get getDateString => '$day ${monthName(isShort: true)}\n$year';
+  String getDateString({bool withNewLine = true}) =>
+      '$day ${monthName(isShort: true)}${withNewLine ? '\n' : ' '}$year';
 
   bool get isToday =>
       day == DateTime.now().day &&
@@ -40,7 +41,12 @@ extension DateTimeExtebsions on DateTime {
       year == DateTime.now().year;
 }
 
+extension NStringExtensions on String? {
+  bool get isNotNullOrEmpty => this != null && this!.trim().isNotEmpty;
+}
+
 extension StringExtensions on String {
+  String get capitalize => '${this[0].toUpperCase()}${substring(1)}';
   RichText toSpiritName({
     required TextStyle titleStyle,
     required TextStyle subTitleStyle,
@@ -48,11 +54,11 @@ extension StringExtensions on String {
     return RichText(
       textAlign: .center,
       text: TextSpan(
-        text: split('\n').first,
+        text: split(' ').first,
         style: titleStyle.copyWith(height: 0.8, letterSpacing: 0.5),
         children: [
           TextSpan(
-            text: '\n${split('\n').last}',
+            text: '\n${split(' ').last}',
             style: subTitleStyle.copyWith(height: 0.5, letterSpacing: 2.4),
           ),
         ],

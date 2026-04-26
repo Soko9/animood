@@ -1,7 +1,9 @@
 import 'package:animood/src/app/home/home_controller.dart';
 import 'package:animood/src/app/models/day.dart';
 import 'package:animood/src/app/models/spirit.dart';
+import 'package:animood/src/app/widgets/day_date_banner.dart';
 import 'package:animood/src/app/widgets/day_widget.dart';
+import 'package:animood/src/app/widgets/quote_widget.dart';
 import 'package:animood/src/app/widgets/spirit_widget.dart';
 import 'package:animood/src/core/app_extensions.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -35,7 +37,67 @@ class HomeScreen extends WatchingWidget {
               _buildCarousel(context, controller, currentSpirit, currentDay),
               _buildMonthYear(currentSpirit, context),
               38.vGap,
-              _buildCalendar(context, currentSpirit, currentDay, controller),
+              _buildCalendar(
+                context,
+                currentSpirit,
+                currentDay,
+                controller,
+              ),
+              if (currentDay != null)
+                Expanded(
+                  child: AnimatedSize(
+                    duration: 450.milliseconds,
+                    curve: Curves.fastEaseInToSlowEaseOut,
+                    child: SizedBox(
+                      height: .infinity,
+                      child: SingleChildScrollView(
+                        padding: const .all(12),
+                        child: Column(
+                          mainAxisSize: .min,
+                          children: [
+                            DayDateBanner(
+                              date: currentDay.dateTime,
+                              color: currentDay.mood.color,
+                              strokeWidth: 5,
+                            ),
+                            18.vGap,
+                            Text(
+                              'You felt ${currentDay.mood.isNone ? 'nothing' : '${currentDay.mood.id}  as a'}',
+                              textAlign: .center,
+                              style: context.textTheme.displaySmall,
+                            ),
+                            if (!currentDay.mood.isNone)
+                              Text(
+                                currentDay.mood.name,
+                                textAlign: .center,
+                                style: context.textTheme.displayMedium
+                                    ?.copyWith(
+                                      fontWeight: .bold,
+                                      color: currentDay.mood.color,
+                                    ),
+                              ),
+                            18.vGap,
+                            if (currentDay.notes.isNotNullOrEmpty)
+                              Column(
+                                mainAxisSize: .min,
+                                crossAxisAlignment: .start,
+                                children: [
+                                  Text(
+                                    'You wrote and I quote',
+                                    style: context.textTheme.titleLarge,
+                                  ),
+                                  QuoteWidget(
+                                    quote: currentDay.notes!,
+                                    color: currentDay.mood.color,
+                                  ),
+                                ],
+                              ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
             ],
           ),
         ),
@@ -50,7 +112,7 @@ class HomeScreen extends WatchingWidget {
     HomeController controller,
   ) {
     return SizedBox(
-      height: context.sh * 0.5,
+      height: context.sh * 0.35,
       child: GridView.count(
         padding: const .all(12),
         crossAxisCount: 4,
@@ -63,7 +125,7 @@ class HomeScreen extends WatchingWidget {
                 .map(
                   (day) => GestureDetector(
                     onTap: () {
-                      if (day.dateTime.isToday && day.mood == null) {
+                      if (day.dateTime.isToday && day.mood.isNone) {
                         //TODO: IMPLEMENT TODAY'S MOOD ENTRY
                       } else {
                         if (controller.currentDay.value == day) {

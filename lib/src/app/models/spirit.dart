@@ -12,7 +12,13 @@ class SpiritMood {
     required this.icon,
   });
 
-  factory SpiritMood.none() => const SpiritMood(
+  final String id;
+  final String name;
+  final String description;
+  final Color color;
+  final String icon;
+
+  static const SpiritMood none = SpiritMood(
     id: 'none',
     name: 'None',
     description: 'No spirit mood selected.',
@@ -20,16 +26,12 @@ class SpiritMood {
     icon: GameIcons.cross_mark,
   );
 
-  final String id;
-  final String name;
-  final String description;
-  final Color color;
-  final String icon;
+  bool get isNone => id == 'none';
 
   static const List<SpiritMood> all = [
     SpiritMood(
       id: 'happy',
-      name: 'Joy\nHound',
+      name: 'Joy Hound',
       description:
           'Your inner dog is wagging its tail—full of joy, energy, and love for the moment.',
       color: AppColors.happy,
@@ -37,7 +39,7 @@ class SpiritMood {
     ),
     SpiritMood(
       id: 'calm',
-      name: 'Serene\nDeer',
+      name: 'Serene Deer',
       description:
           'Like a quiet deer in the forest, you’re grounded, gentle, and at peace.',
       color: AppColors.calm,
@@ -45,7 +47,7 @@ class SpiritMood {
     ),
     SpiritMood(
       id: 'neutral',
-      name: 'Steady\nPenguin',
+      name: 'Steady Penguin',
       description:
           'Your penguin is just going with the flow—steady, balanced, and taking things as they come.',
       color: AppColors.neutral,
@@ -53,7 +55,7 @@ class SpiritMood {
     ),
     SpiritMood(
       id: 'low',
-      name: 'Weary\nSloth',
+      name: 'Weary Sloth',
       description:
           'Your sloth is moving slow today—low energy, seeking rest and a little extra care.',
       color: AppColors.low,
@@ -61,7 +63,7 @@ class SpiritMood {
     ),
     SpiritMood(
       id: 'sad',
-      name: 'Gloomy\nHopper',
+      name: 'Gloomy Hopper',
       description:
           'A quiet frog in the rain—soft, reflective, and feeling the weight of emotions.',
       color: AppColors.sad,
@@ -69,7 +71,7 @@ class SpiritMood {
     ),
     SpiritMood(
       id: 'angry',
-      name: 'Rage\nWyvern',
+      name: 'Rage Wyvern',
       description:
           'Your dragon is awarke—fiery, intense, and ready to release what’s been building up.',
       color: AppColors.angry,
@@ -77,7 +79,7 @@ class SpiritMood {
     ),
     SpiritMood(
       id: 'stressed',
-      name: 'Frenzy\nSquirrel',
+      name: 'Frenzy Squirrel',
       description:
           'Like a busy squirrel, your mind is racing—juggling too much and needing a pause.',
       color: AppColors.stressed,

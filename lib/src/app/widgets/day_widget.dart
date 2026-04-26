@@ -21,8 +21,8 @@ class DayWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final mood = day.mood ?? SpiritMood.none();
-    final color = mood == SpiritMood.none()
+    final mood = day.mood;
+    final color = mood == SpiritMood.none
         ? AppColors.background
         : AppColors.text;
     final isToday = day.dateTime.isToday;
@@ -59,7 +59,7 @@ class DayWidget extends StatelessWidget {
                         ),
                       ]
                     : [],
-                border: isToday && mood == SpiritMood.none()
+                border: isToday && mood.isNone
                     ? Border.all(
                         width: 2,
                         color: currentMoodColor,
@@ -76,7 +76,7 @@ class DayWidget extends StatelessWidget {
                 spacing: 8,
                 children: [
                   Text(
-                    day.dateTime.getDateString,
+                    day.dateTime.getDateString(),
                     textAlign: .center,
                     style: context.textTheme.bodySmall?.copyWith(
                       color: color,
