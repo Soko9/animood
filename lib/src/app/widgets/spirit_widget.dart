@@ -12,6 +12,7 @@ class SpiritWidget extends StatelessWidget {
     this.size = 120,
     this.showExtras = false,
     this.isAnimating = false,
+    this.showMood = false,
     super.key,
   });
 
@@ -19,6 +20,7 @@ class SpiritWidget extends StatelessWidget {
   final double size;
   final bool showExtras;
   final bool isAnimating;
+  final bool showMood;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +35,7 @@ class SpiritWidget extends StatelessWidget {
         Column(
           mainAxisSize: .min,
           children: [
-            if (showExtras) _buildName(textTheme),
+            _buildName(showMood ? spirit.id : spirit.name, textTheme),
             16.vGap,
             _buildIcon(speed, distance, isAnimating),
             (shadowRadius * 0.5).vGap,
@@ -48,8 +50,8 @@ class SpiritWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildName(TextTheme textTheme) {
-    return spirit.name.toSpiritName(
+  Widget _buildName(String text, TextTheme textTheme) {
+    return text.toSpiritName(
       titleStyle: textTheme.titleSmall!.copyWith(
         color: spirit.color,
         fontWeight: .w100,

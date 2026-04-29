@@ -15,6 +15,14 @@ class Day {
   final String? notes;
   final String? image;
 
+  Day copyWith({SpiritMood? mood, String? notes, String? image}) => Day(
+    id: id,
+    dateTime: dateTime,
+    mood: mood ?? this.mood,
+    notes: notes ?? this.notes,
+    image: image ?? this.image,
+  );
+
   static final List<Day> all = [
     Day(
       id: 0,

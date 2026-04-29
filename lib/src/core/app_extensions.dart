@@ -6,6 +6,12 @@ extension ContextExtensions on BuildContext {
   ThemeData get theme => Theme.of(this);
   ColorScheme get colorScheme => theme.colorScheme;
   TextTheme get textTheme => theme.textTheme;
+
+  void push(Widget screen) => Navigator.of(this).push(
+    MaterialPageRoute<dynamic>(builder: (_) => screen),
+  );
+
+  void pop() => Navigator.of(this).pop();
 }
 
 extension NumExtentsions on num {
@@ -54,12 +60,15 @@ extension StringExtensions on String {
     return RichText(
       textAlign: .center,
       text: TextSpan(
-        text: split(' ').first,
+        text: contains(' ') ? '${split(" ").first}\n' : '',
         style: titleStyle.copyWith(height: 0.8, letterSpacing: 0.5),
         children: [
           TextSpan(
-            text: '\n${split(' ').last}',
-            style: subTitleStyle.copyWith(height: 0.5, letterSpacing: 2.4),
+            text: split(' ').last.capitalize,
+            style: subTitleStyle.copyWith(
+              height: 0.5,
+              letterSpacing: 2.4,
+            ),
           ),
         ],
       ),

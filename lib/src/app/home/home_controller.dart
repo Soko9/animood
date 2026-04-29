@@ -4,6 +4,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class HomeController {
+  final ValueNotifier<List<Day>> days = ValueNotifier(Day.all);
+  void addLastDay(Day value) {
+    days.value
+      ..removeLast()
+      ..add(value);
+  }
+
   void onSpiritChanged(int index) {
     currentSpirit.value = SpiritMood.all[index];
   }

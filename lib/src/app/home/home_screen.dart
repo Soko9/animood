@@ -1,12 +1,12 @@
+import 'package:animood/src/app/add_new_day/add_day_screen.dart';
 import 'package:animood/src/app/home/home_controller.dart';
 import 'package:animood/src/app/models/day.dart';
 import 'package:animood/src/app/models/spirit.dart';
 import 'package:animood/src/app/widgets/day_date_banner.dart';
 import 'package:animood/src/app/widgets/day_widget.dart';
 import 'package:animood/src/app/widgets/quote_widget.dart';
-import 'package:animood/src/app/widgets/spirit_widget.dart';
+import 'package:animood/src/app/widgets/spirit_carousel.dart';
 import 'package:animood/src/core/app_extensions.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:watch_it/watch_it.dart';
@@ -17,6 +17,9 @@ class HomeScreen extends WatchingWidget {
   @override
   Widget build(BuildContext context) {
     final controller = di<HomeController>();
+    final days = watchValue(
+      (HomeController controller) => controller.days,
+    );
     final currentSpirit = watchValue(
       (HomeController controller) => controller.currentSpirit,
     );
@@ -39,6 +42,7 @@ class HomeScreen extends WatchingWidget {
               38.vGap,
               _buildCalendar(
                 context,
+                days,
                 currentSpirit,
                 currentDay,
                 controller,
@@ -107,6 +111,7 @@ class HomeScreen extends WatchingWidget {
 
   Widget _buildCalendar(
     BuildContext context,
+    List<Day> days,
     SpiritMood currentSpirit,
     Day? currentDay,
     HomeController controller,
@@ -121,12 +126,12 @@ class HomeScreen extends WatchingWidget {
         children:
             // controller
             //     .getDaysBetween()
-            Day.all
+            days
                 .map(
                   (day) => GestureDetector(
                     onTap: () {
                       if (day.dateTime.isToday && day.mood.isNone) {
-                        //TODO: IMPLEMENT TODAY'S MOOD ENTRY
+                        context.push(const AddDayScreen());
                       } else {
                         if (controller.currentDay.value == day) {
                           controller.currentDay = null;
@@ -180,23 +185,9 @@ class HomeScreen extends WatchingWidget {
       curve: Curves.fastEaseInToSlowEaseOut,
       child: SizedBox(
         height: currentDay == null ? context.sh * 0.3 : 0,
-        child: CarouselSlider.builder(
-          options: CarouselOptions(
-            viewportFraction: 0.5,
-            enlargeCenterPage: true,
-            enlargeStrategy: .zoom,
-            enlargeFactor: 0.8,
-            onPageChanged: (index, _) => controller.onSpiritChanged(index),
-          ),
-          itemCount: SpiritMood.all.length,
-          itemBuilder: (_, index, _) {
-            final spirit = SpiritMood.all[index];
-            return SpiritWidget(
-              spirit: spirit,
-              showExtras: spirit == currentSpirit,
-              isAnimating: spirit == currentSpirit,
-            );
-          },
+        child: SpiritCarousel(
+          onChange: (index) => controller.onSpiritChanged(index),
+          centerSpirit: currentSpirit,
         ),
       ),
     );
