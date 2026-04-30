@@ -1,14 +1,17 @@
+import 'dart:async';
 import 'dart:math';
 
-import 'package:animood/src/app/add_new_day/day_form_controller.dart';
+import 'package:animood/src/app/models/day.dart';
 import 'package:animood/src/app/models/spirit.dart';
 import 'package:animood/src/app/widgets/spirit_carousel.dart';
 import 'package:animood/src/core/app_colors.dart';
 import 'package:animood/src/core/app_extensions.dart';
 import 'package:flutter/material.dart';
-import 'package:watch_it/watch_it.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:iconify_flutter/iconify_flutter.dart';
+import 'package:iconify_flutter/icons/game_icons.dart';
 
-class AddDayScreen extends WatchingStatefulWidget {
+class AddDayScreen extends StatefulWidget {
   const AddDayScreen({super.key});
 
   @override
@@ -17,35 +20,75 @@ class AddDayScreen extends WatchingStatefulWidget {
 
 class _AddDayScreenState extends State<AddDayScreen>
     with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+  final TextEditingController _notesController = TextEditingController();
+
+  Day _day = Day(
+    id: DateTime.now().millisecondsSinceEpoch,
+    dateTime: DateTime.now(),
+  );
+
+  SpiritMood get _mood => _day.mood.isNone ? SpiritMood.all.first : _day.mood;
+
+  void _setDayMood(SpiritMood value) {
+    setState(() {
+      _day = _day.copyWith(mood: value);
+    });
+  }
+
+  // void _setDayImage(String? value) {
+  //   setState(() {
+  //     _day.copyWith(image: value);
+  //   });
+  // }
+
+  void _resetDay() {
+    setState(() {
+      _day = _day.copyWith(mood: SpiritMood.none);
+    });
+  }
+
+  @override
+  void initState() {
+    _animationController = AnimationController(
+      vsync: this,
+      duration: 600.milliseconds,
+    );
+    _animationController.value = _animationController.upperBound;
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _resetDay();
+    _notesController.dispose();
+    _animationController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final controller = di<DayFormController>();
-
-    callOnce((_) => controller.onInit(this));
-
-    onDispose(controller.onDispose);
-
     return Scaffold(
       body: AnimatedBuilder(
-        animation: controller.animationController!,
+        animation: _animationController,
         builder: (_, _) => Stack(
           children: [
             ClipOval(
               clipper: CircleRevealClipper(
-                value: controller.animationController!.value,
+                value: _animationController.value,
               ),
               child: Container(
                 decoration: BoxDecoration(
-                  border: .all(width: 6, color: controller.mood.color),
-                  color: controller.mood.color.withValues(alpha: 0.035),
+                  border: .all(width: 6, color: _mood.color),
+                  color: _mood.color.withValues(alpha: 0.035),
                 ),
               ),
             ),
             ColoredBox(
-              color: controller.mood.color.withValues(alpha: 0.035),
+              color: _mood.color.withValues(alpha: 0.035),
               child: Padding(
                 padding: const .only(top: 24, left: 12, right: 12, bottom: 12),
-                child: _buildBody(controller, context),
+                child: _buildBody(context),
               ),
             ),
           ],
@@ -54,11 +97,11 @@ class _AddDayScreenState extends State<AddDayScreen>
     );
   }
 
-  Widget _buildBody(DayFormController controller, BuildContext context) {
+  Widget _buildBody(BuildContext context) {
     return Column(
       crossAxisAlignment: .start,
       children: [
-        _buildBackButton(controller, context),
+        _buildBackButton(context),
         Text(
           'How are you feeling today?',
           textAlign: .center,
@@ -66,8 +109,11 @@ class _AddDayScreenState extends State<AddDayScreen>
         ),
         (context.sh * 0.075).vGap,
         SpiritCarousel(
-          onChange: (index) => controller.setDayMood(SpiritMood.all[index]),
-          centerSpirit: controller.mood,
+          onChange: (index) {
+            _setDayMood(SpiritMood.all[index]);
+            unawaited(_animationController.forward(from: 0));
+          },
+          centerSpirit: _mood,
           scale: 1.6,
           viewport: 0.35,
           isAnimating: false,
@@ -76,7 +122,7 @@ class _AddDayScreenState extends State<AddDayScreen>
         ),
         12.vGap,
         TextField(
-          controller: controller.notesController,
+          controller: _notesController,
           maxLines: 4,
           style: context.textTheme.displaySmall?.copyWith(
             color: AppColors.text,
@@ -84,13 +130,13 @@ class _AddDayScreenState extends State<AddDayScreen>
           cursorColor: AppColors.text,
           decoration: InputDecoration(
             filled: true,
-            fillColor: controller.mood.color.withValues(alpha: 0.4),
+            fillColor: _mood.color.withValues(alpha: 0.4),
             enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(width: 2, color: controller.mood.color),
+              borderSide: BorderSide(width: 2, color: _mood.color),
               borderRadius: .circular(4),
             ),
             focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(width: 4, color: controller.mood.color),
+              borderSide: BorderSide(width: 4, color: _mood.color),
               borderRadius: .circular(4),
             ),
           ),
@@ -99,29 +145,59 @@ class _AddDayScreenState extends State<AddDayScreen>
     );
   }
 
-  Widget _buildBackButton(
-    DayFormController controller,
-    BuildContext context,
-  ) {
-    return Container(
-      decoration: BoxDecoration(
-        color: controller.mood.color,
-        borderRadius: .circular(4),
-      ),
-      padding: const .all(6),
-      margin: const .symmetric(vertical: 24, horizontal: 12),
-      child: IconButton(
-        onPressed: () {
-          context.pop();
-        },
-        icon: const Icon(
-          Icons.arrow_back_ios_new_rounded,
-          color: Colors.white,
+  Widget _buildBackButton(BuildContext context) {
+    return Row(
+      mainAxisAlignment: .spaceBetween,
+      children: [
+        AnimatedContainer(
+          duration: 350.milliseconds,
+          decoration: BoxDecoration(
+            border: .all(width: 3, color: _mood.color),
+            borderRadius: .circular(4),
+          ),
+          padding: const .all(6),
+          margin: const .symmetric(vertical: 24, horizontal: 4),
+          child: IconButton(
+            onPressed: () {
+              context.pop();
+            },
+            icon: Transform.rotate(
+              angle: -3.95,
+              child: Iconify(
+                GameIcons.arrowhead,
+                color: _mood.color,
+                size: 32,
+              ),
+            ),
+            constraints: const .tightFor(),
+            padding: .zero,
+            visualDensity: .compact,
+          ),
         ),
-        constraints: const .tightFor(),
-        padding: .zero,
-        visualDensity: .compact,
-      ),
+        AnimatedContainer(
+          duration: 350.milliseconds,
+          decoration: BoxDecoration(
+            color: _mood.color,
+            border: .all(width: 3, color: _mood.color),
+            borderRadius: .circular(4),
+          ),
+          padding: const .all(6),
+          margin: const .symmetric(vertical: 24, horizontal: 4),
+          child: IconButton(
+            onPressed: () {
+              context.pop();
+            },
+            icon: const Iconify(
+              GameIcons.check_mark,
+              color: AppColors.background,
+              size: 32,
+            ),
+            constraints: const .tightFor(),
+            padding: .zero,
+            visualDensity: .compact,
+          ),
+        ),
+      ],
     );
   }
 }
