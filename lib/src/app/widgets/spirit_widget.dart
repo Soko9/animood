@@ -56,7 +56,7 @@ class SpiritWidget extends StatelessWidget {
         color: spirit.color,
         fontWeight: .w100,
       ),
-      subTitleStyle: textTheme.headlineLarge!.copyWith(
+      subTitleStyle: textTheme.headlineSmall!.copyWith(
         color: spirit.color,
         fontWeight: .w900,
       ),

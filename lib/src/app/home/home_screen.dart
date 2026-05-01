@@ -184,7 +184,7 @@ class HomeScreen extends WatchingWidget {
       duration: 450.milliseconds,
       curve: Curves.fastEaseInToSlowEaseOut,
       child: SizedBox(
-        height: currentDay == null ? context.sh * 0.3 : 0,
+        height: currentDay == null ? context.sh * 0.375 : 0,
         child: SpiritCarousel(
           onChange: (index) => controller.onSpiritChanged(index),
           centerSpirit: currentSpirit,

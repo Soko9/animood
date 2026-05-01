@@ -52,15 +52,15 @@ class _AddDayScreenState extends State<AddDayScreen>
   void initState() {
     _animationController = AnimationController(
       vsync: this,
-      duration: 600.milliseconds,
+      duration: 850.milliseconds,
     );
     _animationController.value = _animationController.upperBound;
+    _resetDay();
     super.initState();
   }
 
   @override
   void dispose() {
-    _resetDay();
     _notesController.dispose();
     _animationController.dispose();
     super.dispose();
@@ -79,13 +79,13 @@ class _AddDayScreenState extends State<AddDayScreen>
               ),
               child: Container(
                 decoration: BoxDecoration(
-                  border: .all(width: 6, color: _mood.color),
-                  color: _mood.color.withValues(alpha: 0.035),
+                  border: .all(width: 3, color: _mood.color),
+                  color: _mood.color.withValues(alpha: 0.05),
                 ),
               ),
             ),
             ColoredBox(
-              color: _mood.color.withValues(alpha: 0.035),
+              color: _mood.color.withValues(alpha: 0.05),
               child: Padding(
                 padding: const .only(top: 24, left: 12, right: 12, bottom: 12),
                 child: _buildBody(context),
@@ -107,15 +107,15 @@ class _AddDayScreenState extends State<AddDayScreen>
           textAlign: .center,
           style: context.textTheme.displayLarge,
         ),
-        (context.sh * 0.075).vGap,
+        (context.sh * 0.1).vGap,
         SpiritCarousel(
           onChange: (index) {
             _setDayMood(SpiritMood.all[index]);
             unawaited(_animationController.forward(from: 0));
           },
           centerSpirit: _mood,
-          scale: 1.6,
-          viewport: 0.35,
+          scale: 1.4,
+          viewport: 0.4,
           isAnimating: false,
           showExtras: false,
           showMood: true,
@@ -149,52 +149,41 @@ class _AddDayScreenState extends State<AddDayScreen>
     return Row(
       mainAxisAlignment: .spaceBetween,
       children: [
-        AnimatedContainer(
-          duration: 350.milliseconds,
-          decoration: BoxDecoration(
-            border: .all(width: 3, color: _mood.color),
-            borderRadius: .circular(4),
-          ),
-          padding: const .all(6),
-          margin: const .symmetric(vertical: 24, horizontal: 4),
-          child: IconButton(
-            onPressed: () {
-              context.pop();
-            },
-            icon: Transform.rotate(
-              angle: -3.95,
-              child: Iconify(
-                GameIcons.arrowhead,
-                color: _mood.color,
-                size: 32,
-              ),
-            ),
-            constraints: const .tightFor(),
-            padding: .zero,
-            visualDensity: .compact,
+        IconButton(
+          onPressed: () {
+            context.pop();
+          },
+          icon: Icon(
+            Icons.arrow_back_ios_new_rounded,
+            color: _mood.color,
           ),
         ),
-        AnimatedContainer(
-          duration: 350.milliseconds,
-          decoration: BoxDecoration(
-            color: _mood.color,
-            border: .all(width: 3, color: _mood.color),
-            borderRadius: .circular(4),
-          ),
-          padding: const .all(6),
-          margin: const .symmetric(vertical: 24, horizontal: 4),
-          child: IconButton(
-            onPressed: () {
-              context.pop();
-            },
-            icon: const Iconify(
-              GameIcons.check_mark,
-              color: AppColors.background,
-              size: 32,
+        Transform.rotate(
+          angle: pi / 4,
+          child: AnimatedContainer(
+            duration: 350.milliseconds,
+            decoration: BoxDecoration(
+              color: _mood.color,
+              border: .all(width: 3, color: _mood.color),
+              borderRadius: .circular(4),
             ),
-            constraints: const .tightFor(),
-            padding: .zero,
-            visualDensity: .compact,
+            padding: const .all(6),
+            margin: const .all(24),
+            child: Transform.rotate(
+              angle: -(pi / 4),
+              child: IconButton(
+                onPressed: () {
+                  context.pop();
+                },
+                icon: const Iconify(
+                  GameIcons.check_mark,
+                  color: AppColors.background,
+                ),
+                constraints: const .tightFor(),
+                padding: .zero,
+                visualDensity: .compact,
+              ),
+            ),
           ),
         ),
       ],
