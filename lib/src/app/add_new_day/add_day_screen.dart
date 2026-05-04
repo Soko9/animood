@@ -167,8 +167,7 @@ class _AddDayScreenState extends State<AddDayScreen>
               border: .all(width: 3, color: _mood.color),
               borderRadius: .circular(4),
             ),
-            padding: const .all(6),
-            margin: const .all(24),
+            margin: const .only(top: 38, right: 24, bottom: 24, left: 24),
             child: Transform.rotate(
               angle: -(pi / 4),
               child: IconButton(
